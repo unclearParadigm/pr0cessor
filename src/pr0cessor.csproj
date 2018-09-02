@@ -1,0 +1,15 @@
+<!-- das pr0gramm mag pr0grammierer -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LangVersion>7.1</LangVersion>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.3.65" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="1.10.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+</Project>
