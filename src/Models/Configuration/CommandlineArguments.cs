@@ -13,7 +13,7 @@ namespace Pr0cessor.Models.Configuration {
     [Option('p', "password", Required = true, HelpText = "Your password, required for authentication")]
     public string Password { get; set; }
 
-    [Option('e', "everything", Default = true, HelpText = "Downloads everything")]
+    [Option('e', "everything", Default = false, HelpText = "Downloads everything")]
     public bool Everything { get; set; }
 
     [Option('i', "imagesOnly", Default = false, HelpText = "Downloads only images")]

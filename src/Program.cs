@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -21,27 +22,32 @@ namespace Pr0cessor {
         (Favs favArgs) => FavsMain(favArgs),
         (Stats statArgs) => StatsMain(statArgs),
         errors => Task.FromResult<int>(0));
+      
+      Console.WriteLine("Ok");
     }
 
     public static async Task<int> FavsMain(Favs favArgs) {
       var api = CreatePr0grammApi("");
-      var favs = favArgs.User.Trim();
-      var user = favArgs.Username.Trim();
-      var pass = favArgs.Password.Trim();
 
-      var login = await api.LoginAsync(user, pass);
+      var login = await api.LoginAsync(favArgs.Username.Trim(), favArgs.Password.Trim());
       if (login.IsFailure) {
         Console.WriteLine(login.Error);
         return Constants.EXITCODE_AUTHERR;
       }
 
-      var favorites = await api.GetFavoritesAsync(favs);
+      var favorites = await api.GetFavoritesAsync(favArgs.User.Trim());
       if (favorites.IsFailure) {
         Console.WriteLine(favorites.Error);
         return Constants.EXITCODE_FAILURE;
       }
 
-      return await Download(favorites.Value, favArgs.Destination);
+      var filteredFavorites = favorites.Value
+        .Where(fav => (favArgs.ImagesOnly && ApiHelpers.IsImage(fav))
+                      || (favArgs.VideosOnly && ApiHelpers.IsVideo(fav))
+                      || (favArgs.Everything))
+        .ToList();
+
+      return await Download(filteredFavorites, favArgs.Destination.Trim());  
     }
 
     private static async Task<int> StatsMain(Stats statArgs) {
@@ -54,7 +60,7 @@ namespace Pr0cessor {
       return new Pr0grammApi.Pr0grammApi();
     }
 
-        public static async Task<int> Download(IEnumerable<FavoriteItem> allItems, string destination) {
+    public static async Task<int> Download(IEnumerable<FavoriteItem> allItems, string destination) {
       Console.WriteLine($"Downloading {allItems.Count()} elements");
       using (var statusBar = new Pr0gressIndicator()) {
         int readyElements = 0;
@@ -62,9 +68,9 @@ namespace Pr0cessor {
         Action update = new Action(() => statusBar.Report((double)readyElements++ / totalElements));
 
         var downloaderTasks = allItems
-          .Select(x => ImageLoader.DownloadImage(
-            ApiHelpers.GetDownloadLink(x),
-            System.IO.Path.Combine(destination, $"{x.Id.ToString()}_{x.Uploader}{x.FileExtension}"),
+          .Select(fav => ImageLoader.DownloadImage(
+            ApiHelpers.GetDownloadLink(fav),
+            System.IO.Path.Combine(destination, $"{fav.Id.ToString()}_{fav.Uploader}{fav.FileExtension}"),
             update)
           );
 

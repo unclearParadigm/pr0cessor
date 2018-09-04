@@ -35,9 +35,7 @@ namespace Pr0cessor.Pr0grammApi {
       var apiUri = new Uri($"{ApiConstants.ApiEndpoint}/user/login");
       var postData = new LoginRequest(username, password).ToFormUrlEncodedContent();
       var response = await Post<LoginResponse>(apiUri, postData);
-
       return response
-        .Ensure(r => !r.UserBanned, $"Your user is banned :/ Reason: {response.Error}")
         .OnSuccess(r => {
           CurrentSession = new Session { Login = r, Username = username };
           return Result.Ok<Session, string>(CurrentSession);
@@ -53,7 +51,6 @@ namespace Pr0cessor.Pr0grammApi {
       var uri = new Uri($"{ApiConstants.ApiEndpoint}/items/get?{queryData}");
       var response = await Get<FavsResponse>(uri);
       return response
-        .Ensure(r => !r.HasError, response.Value.Error)
         .OnSuccess(r => response.Value.Favorites);
     }
 

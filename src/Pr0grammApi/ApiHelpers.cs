@@ -8,9 +8,9 @@ namespace Pr0cessor.Pr0grammApi {
 
     public static Uri GetDownloadLink(FavoriteItem item) {
       var preparedImageUrl = item.ImageUriRelative.Replace("\\", "");
-      if (IsImage(item))
-        return new Uri($"{ApiConstants.VideoEndpoint}/{preparedImageUrl}");
       if (IsVideo(item))
+        return new Uri($"{ApiConstants.VideoEndpoint}/{preparedImageUrl}");
+      if (IsImage(item))
         return new Uri($"{ApiConstants.ImageEndpoint}/{preparedImageUrl}");
       throw new Exception("This File-Extension is not yet supported. (Do you maybe use an outdated version of pr0cessor?).");
     }
