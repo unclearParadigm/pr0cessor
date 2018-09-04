@@ -8,12 +8,33 @@ namespace Pr0cessor.Pr0grammApi {
 
     public static Uri GetDownloadLink(FavoriteItem item) {
       var preparedImageUrl = item.ImageUriRelative.Replace("\\", "");
+      if (IsImage(item))
+        return new Uri($"{ApiConstants.VideoEndpoint}/{preparedImageUrl}");
+      if (IsVideo(item))
+        return new Uri($"{ApiConstants.ImageEndpoint}/{preparedImageUrl}");
+      throw new Exception("This File-Extension is not yet supported. (Do you maybe use an outdated version of pr0cessor?).");
+    }
+    public static bool IsVideo(FavoriteItem item) {
       switch (item.FileExtension.ToLower()) {
-        case "webm":
-        case "mp4":
-          return new Uri($"{ApiConstants.VideoEndpoint}/{preparedImageUrl}");
+        case ".mp4":
+        case ".webm":
+          return true;
+
         default:
-          return new Uri($"{ApiConstants.ImageEndpoint}/{preparedImageUrl}");
+          return false;
+      }
+    }
+
+    public static bool IsImage(FavoriteItem item) {
+      switch (item.FileExtension.ToLower()) {
+        case ".jpg":
+        case ".png":
+        case ".gif":
+        case ".jpeg":
+          return true;
+
+        default:
+          return false;
       }
     }
   }

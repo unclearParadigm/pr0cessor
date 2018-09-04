@@ -37,7 +37,7 @@ namespace Pr0cessor.Pr0grammApi {
       var response = await Post<LoginResponse>(apiUri, postData);
 
       return response
-        .Ensure(r => !r.UserBanned, "Your user is Banned :/")
+        .Ensure(r => !r.UserBanned, $"Your user is banned :/ Reason: {response.Error}")
         .OnSuccess(r => {
           CurrentSession = new Session { Login = r, Username = username };
           return Result.Ok<Session, string>(CurrentSession);
