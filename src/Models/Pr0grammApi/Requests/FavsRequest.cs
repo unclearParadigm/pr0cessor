@@ -9,9 +9,7 @@ namespace Pr0cessor.Models.Pr0grammApi.Requests {
     public string Likes { get; set; }
     public string Flags { get; set; }
 
-    public bool Self {get; set;}
-
-    public FavsRequest(string likes, Flags flags, bool self) {
+    public FavsRequest(string likes, Flags flags) {
       Likes = likes;
       Flags = Convert.ToString((int)flags);
     }
@@ -19,8 +17,7 @@ namespace Pr0cessor.Models.Pr0grammApi.Requests {
     public FormUrlEncodedContent ToFormUrlEncodedContent() {
       var dict = new Dictionary<string, string> {
             {"likes", Likes },
-            {"flags", Flags.ToString() },
-            {"self", Self.ToString().ToLower()}
+            {"flags", Flags.ToString() }
       };
       return new FormUrlEncodedContent(dict);
     }

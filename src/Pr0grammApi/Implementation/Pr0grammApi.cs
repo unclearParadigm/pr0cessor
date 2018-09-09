@@ -14,14 +14,12 @@ using Pr0cessor.Models.Pr0grammApi;
 using Pr0cessor.Models.Pr0grammApi.Requests;
 using Pr0cessor.Models.Pr0grammApi.Responses;
 
-namespace Pr0cessor.Pr0grammApi {
-  public class Pr0grammApi : IPr0grammApi {
+namespace Pr0cessor.Pr0grammApi.Implementation {
+  public class Pr0grammApi : IPr0grammApi, IDisposable {
     private readonly int _requestTimeout;
     private readonly HttpClient _httpClient;
     private readonly CookieContainer _cookieContainer;
     private readonly HttpClientHandler _httpClientHandler;
-
-    private Session CurrentSession;
 
     public Pr0grammApi(int requestTimeout = 5000) {
       _requestTimeout = requestTimeout;
@@ -31,20 +29,28 @@ namespace Pr0cessor.Pr0grammApi {
       _httpClient = new HttpClient(_httpClientHandler, false);
     }
 
-    public async Task<Result<Session, string>> LoginAsync(string username, string password) {
+    public void AuthWithExistingSession(Session session) {
+      _cookieContainer.Add(session.PPCookie);
+      _cookieContainer.Add(session.MECookie);
+    }
+
+    public async Task<Result<Session, string>> AuthAsync(string username, string password) {
       var apiUri = new Uri($"{ApiConstants.ApiEndpoint}/user/login");
       var postData = new LoginRequest(username, password).ToFormUrlEncodedContent();
-      var response = await Post<LoginResponse>(apiUri, postData);
-      return response
-        .OnSuccess(r => {
-          CurrentSession = new Session { Login = r, Username = username };
-          return Result.Ok<Session, string>(CurrentSession);
+      return (await Post<LoginResponse>(apiUri, postData))
+        .OnSuccess(response => {
+          return Result.Ok<Session, string>(new Session {
+            Login = response,
+            Username = username,
+            PPCookie = GetCookieByName("pp", new Uri(ApiConstants.ApiEndpoint)),
+            MECookie = GetCookieByName("me", new Uri(ApiConstants.ApiEndpoint))
+          });
         });
     }
 
     public async Task<Result<IEnumerable<FavoriteItem>, string>> GetFavoritesAsync(string targetUser) {
       var queryData =
-        await new FavsRequest(targetUser, Flags.All, CurrentSession.Username == targetUser)
+        await new FavsRequest(targetUser, Flags.All)
         .ToFormUrlEncodedContent()
         .ReadAsStringAsync();
 
@@ -91,6 +97,10 @@ namespace Pr0cessor.Pr0grammApi {
       } catch (Exception exc) {
         return Result.Fail<T, string>(exc.Message);
       }
+    }
+
+    public void Dispose() {
+      throw new NotImplementedException();
     }
   }
 }

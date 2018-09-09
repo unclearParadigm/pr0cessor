@@ -8,34 +8,59 @@ using CommandLine;
 using CSharpFunctionalExtensions;
 
 using Pr0cessor.Pr0grammApi;
+using Pr0cessor.Pr0grammApi.Factories;
+
 using Pr0cessor.Models.Configuration;
 using Pr0cessor.Models.Pr0grammApi.Responses;
 
 namespace Pr0cessor {
-  public class Program {
+  public class Entrance {
+    private static readonly ISessionStorage sessionStorage;
+    static Entrance() {
+      sessionStorage = SessionStorageFactory.Create(StorageType.Json, "~/Downloads/.pr0auth.json");
+    }
+
     static async Task Main(string[] args) {
       PrintHeader();
 
       await CommandLine.Parser.Default
-      .ParseArguments<Favs, Stats>(args)
+      .ParseArguments<Auth, Favs, Stats>(args)
       .MapResult(
+        (Auth authArgs) => AuthMain(authArgs),
         (Favs favArgs) => FavsMain(favArgs),
         (Stats statArgs) => StatsMain(statArgs),
         errors => Task.FromResult<int>(0));
-      
+
       Console.WriteLine("Ok");
     }
 
-    public static async Task<int> FavsMain(Favs favArgs) {
-      var api = CreatePr0grammApi("");
+    public static async Task<int> AuthMain(Auth authArgs) {
+      var api = await Pr0grammApiFactory.Create(
+        authArgs.Username.Trim(),
+        authArgs.Password.Trim(),
+        sessionStorage);
 
-      var login = await api.LoginAsync(favArgs.Username.Trim(), favArgs.Password.Trim());
-      if (login.IsFailure) {
-        Console.WriteLine(login.Error);
+      if (api.IsSuccess) {
+        Console.WriteLine($"Success! You are now permanently logged in as {authArgs.Username.Trim()}");
+        return Constants.EXITCODE_SUCCESS;
+      } else {
+        Console.WriteLine(api.Error);
+        return 0;
+      }
+    }
+
+    public static async Task<int> FavsMain(Favs favArgs) {
+      var api = await Pr0grammApiFactory.Create(
+        favArgs.Username.Trim(),
+        favArgs.Password.Trim(),
+        sessionStorage);
+
+      if (api.IsFailure) {
+        Console.WriteLine(api.Error);
         return Constants.EXITCODE_AUTHERR;
       }
 
-      var favorites = await api.GetFavoritesAsync(favArgs.User.Trim());
+      var favorites = await api.Value.GetFavoritesAsync(favArgs.User.Trim());
       if (favorites.IsFailure) {
         Console.WriteLine(favorites.Error);
         return Constants.EXITCODE_FAILURE;
@@ -44,10 +69,11 @@ namespace Pr0cessor {
       var filteredFavorites = favorites.Value
         .Where(fav => (favArgs.ImagesOnly && ApiHelpers.IsImage(fav))
                       || (favArgs.VideosOnly && ApiHelpers.IsVideo(fav))
-                      || (favArgs.Everything))
-        .ToList();
+                      || (favArgs.Everything)).ToList();
 
-      return await Download(filteredFavorites, favArgs.Destination.Trim());  
+      return await DownloadWithProgressIndicator(
+        filteredFavorites,
+        favArgs.Destination.Trim());
     }
 
     private static async Task<int> StatsMain(Stats statArgs) {
@@ -55,12 +81,7 @@ namespace Pr0cessor {
       throw new NotImplementedException("Status is not implemented yet.");
     }
 
-    private static IPr0grammApi CreatePr0grammApi(string mode) {
-      // Factory for future-use
-      return new Pr0grammApi.Pr0grammApi();
-    }
-
-    public static async Task<int> Download(IEnumerable<FavoriteItem> allItems, string destination) {
+    public static async Task<int> DownloadWithProgressIndicator(IEnumerable<FavoriteItem> allItems, string destination) {
       Console.WriteLine($"Downloading {allItems.Count()} elements");
       using (var statusBar = new Pr0gressIndicator()) {
         int readyElements = 0;
