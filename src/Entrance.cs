@@ -17,7 +17,7 @@ namespace Pr0cessor {
   public class Entrance {
     private static readonly ISessionStorage sessionStorage;
     static Entrance() {
-      sessionStorage = SessionStorageFactory.Create(StorageType.Json, "~/Downloads/.pr0auth.json");
+      sessionStorage = SessionStorageFactory.Create(StorageType.Json, ".pr0auth.json");
     }
 
     static async Task Main(string[] args) {
@@ -29,15 +29,13 @@ namespace Pr0cessor {
         (Auth authArgs) => AuthMain(authArgs),
         (Favs favArgs) => FavsMain(favArgs),
         (Stats statArgs) => StatsMain(statArgs),
-        errors => Task.FromResult<int>(0));
-
-      Console.WriteLine("Ok");
+        errors => Task.FromResult<int>(Constants.EXITCODE_FAILURE));
     }
 
     public static async Task<int> AuthMain(Auth authArgs) {
       var api = await Pr0grammApiFactory.Create(
-        authArgs.Username.Trim(),
-        authArgs.Password.Trim(),
+        authArgs.Username,
+        authArgs.Password,
         sessionStorage);
 
       if (api.IsSuccess) {
@@ -50,11 +48,8 @@ namespace Pr0cessor {
     }
 
     public static async Task<int> FavsMain(Favs favArgs) {
-      var api = await Pr0grammApiFactory.Create(
-        favArgs.Username.Trim(),
-        favArgs.Password.Trim(),
-        sessionStorage);
-
+      var api =
+        await Pr0grammApiFactory.Create(favArgs.Username, favArgs.Password, sessionStorage);
       if (api.IsFailure) {
         Console.WriteLine(api.Error);
         return Constants.EXITCODE_AUTHERR;
@@ -81,7 +76,7 @@ namespace Pr0cessor {
       throw new NotImplementedException("Status is not implemented yet.");
     }
 
-    public static async Task<int> DownloadWithProgressIndicator(IEnumerable<FavoriteItem> allItems, string destination) {
+    public static async Task<int> DownloadWithProgressIndicator(IEnumerable<Item> allItems, string destination) {
       Console.WriteLine($"Downloading {allItems.Count()} elements");
       using (var statusBar = new Pr0gressIndicator()) {
         int readyElements = 0;
@@ -89,7 +84,7 @@ namespace Pr0cessor {
         Action update = new Action(() => statusBar.Report((double)readyElements++ / totalElements));
 
         var downloaderTasks = allItems
-          .Select(fav => ImageLoader.DownloadImage(
+          .Select(fav => ItemLoader.DownloadImage(
             ApiHelpers.GetDownloadLink(fav),
             System.IO.Path.Combine(destination, $"{fav.Id.ToString()}_{fav.Uploader}{fav.FileExtension}"),
             update)
@@ -103,9 +98,9 @@ namespace Pr0cessor {
     }
 
     private static void PrintHeader() {
-      Console.WriteLine("----------------------------------------");
+      Console.WriteLine("------------------------------------------");
       Console.WriteLine(Constants.HEADER);
-      Console.WriteLine("----------------------------------------");
+      Console.WriteLine("------------------------------------------");
     }
   }
 }

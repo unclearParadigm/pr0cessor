@@ -44,20 +44,38 @@ namespace Pr0cessor.Pr0grammApi.Implementation {
             Username = username,
             PPCookie = GetCookieByName("pp", new Uri(ApiConstants.ApiEndpoint)),
             MECookie = GetCookieByName("me", new Uri(ApiConstants.ApiEndpoint))
-          });
+          })
+          .OnFailure(error => Result.Fail<Session, string>(error));
         });
     }
 
-    public async Task<Result<IEnumerable<FavoriteItem>, string>> GetFavoritesAsync(string targetUser) {
-      var queryData =
-        await new FavsRequest(targetUser, Flags.All)
-        .ToFormUrlEncodedContent()
-        .ReadAsStringAsync();
+    public async Task<Result<IEnumerable<Item>, string>> GetFavoritesAsync(string targetUser) {
+      var reachedEndOfItems = false;
+      long? lastReceivedItemId = null;
+      var favoritesCollection = new List<Item>();
 
-      var uri = new Uri($"{ApiConstants.ApiEndpoint}/items/get?{queryData}");
-      var response = await Get<FavsResponse>(uri);
-      return response
-        .OnSuccess(r => response.Value.Favorites);
+      while (!reachedEndOfItems) {
+        var queryData =
+          await new ItemsRequest(targetUser, Flags.All, lastReceivedItemId)
+          .ToFormUrlEncodedContent()
+          .ReadAsStringAsync();
+          
+        var uri = new Uri($"{ApiConstants.ApiEndpoint}/items/get?{queryData}");
+
+        var itemsResponse = (await Get<ItemsResponse>(uri))
+          .OnSuccess(successfulResponse => {
+            reachedEndOfItems = successfulResponse.AtEnd;
+            favoritesCollection.AddRange(successfulResponse.Favorites);
+
+            if(successfulResponse.Favorites.Any())
+              lastReceivedItemId = successfulResponse.Favorites.Min(x => x.Id);
+          });
+
+        if (itemsResponse.IsFailure) {
+          return Result.Fail<IEnumerable<Item>, string>(itemsResponse.Error);
+        }
+      }
+      return Result.Ok<IEnumerable<Item>, string>(favoritesCollection);
     }
 
     private Cookie GetCookieByName(string name, Uri uri) {
@@ -68,7 +86,6 @@ namespace Pr0cessor.Pr0grammApi.Implementation {
     private async Task<Result<T, string>> Get<T>(Uri uri) {
       try {
         var cts = new CancellationTokenSource(_requestTimeout);
-
         var response = await _httpClient.GetAsync(uri, cts.Token);
         if (!response.IsSuccessStatusCode)
           return Result.Fail<T, string>($"Whoops! Cannot contact pr0gramm.com (Reason: {response.StatusCode})");

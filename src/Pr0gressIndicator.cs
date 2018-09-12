@@ -19,7 +19,7 @@ namespace Pr0cessor {
         ResetTimer();
       }
     }
-
+    
     public void Report(double value) {
       // Make sure value is in [0..1] range
       value = Math.Max(0, Math.Min(1, value));

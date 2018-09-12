@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Pr0cessor.Models.Pr0grammApi.Responses {
-  public class FavsResponse {
+  public class ItemsResponse {
     [JsonProperty(PropertyName = "error")]
     public string Error { get; set; }
 
@@ -15,12 +15,12 @@ namespace Pr0cessor.Models.Pr0grammApi.Responses {
     public bool AtStart { get; set; }
 
     [JsonProperty(PropertyName = "items")]
-    public IEnumerable<FavoriteItem> Favorites { get; set; }
+    public IEnumerable<Item> Favorites { get; set; }
 
     public bool HasError => !string.IsNullOrEmpty(Error);
   }
 
-  public class FavoriteItem {
+  public class Item {
     [JsonProperty(PropertyName = "id")]
     public long Id { get; set; }
 

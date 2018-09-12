@@ -16,10 +16,10 @@ namespace Pr0cessor.Models.Configuration {
     [Option('f', "from", Required = true, HelpText = "The username the favs belong to")]
     public string User { get; set; }
 
-    [Option('u', "username", Required = false, HelpText = "Your username, required for authentication (if not authed already)")]
+    [Option('u', "username", Required = false, Default = null, HelpText = "Your username, required for authentication (if not authed already)")]
     public string Username { get; set; }
 
-    [Option('p', "password", Required = false, HelpText = "Your password, required for authentication (if not authed already)")]
+    [Option('p', "password", Required = false, Default = null, HelpText = "Your password, required for authentication (if not authed already)")]
     public string Password { get; set; }
 
     [Option('e', "everything", Default = false, HelpText = "Downloads everything")]

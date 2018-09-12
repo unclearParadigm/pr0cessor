@@ -21,7 +21,9 @@ namespace Pr0cessor.Pr0grammApi.Factories {
     }
 
     public static async Task<Result<IPr0grammApi>> Create(string username, string password, ISessionStorage sessionStorage) {
-      if (string.IsNullOrEmpty(username.Trim()) || string.IsNullOrEmpty(password.Trim())) {
+      if (string.IsNullOrEmpty(username) 
+          && string.IsNullOrEmpty(password)
+          && sessionStorage.HasStored()) {
         var session = sessionStorage.Get();
         if (session.IsFailure)
           return Result.Fail<IPr0grammApi>(session.Error);
@@ -32,7 +34,7 @@ namespace Pr0cessor.Pr0grammApi.Factories {
       } else {
         // Create with username and password, persist session
         var api = new Implementation.Pr0grammApi();
-        return (await api.AuthAsync(username, password))
+        return (await api.AuthAsync(username.Trim(), password.Trim()))
             .OnFailure(error => Result.Fail(error))
             .OnSuccess(session => sessionStorage.Set(session))
             .OnSuccess(persist => Result.Ok<IPr0grammApi>(api));

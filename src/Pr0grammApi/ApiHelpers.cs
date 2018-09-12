@@ -5,7 +5,7 @@ using Pr0cessor.Models.Pr0grammApi.Responses;
 namespace Pr0cessor.Pr0grammApi {
   public static class ApiHelpers {
 
-    public static Uri GetDownloadLink(FavoriteItem item) {
+    public static Uri GetDownloadLink(Item item) {
       var preparedImageUrl =
         item.ImageUriRelative.Replace("\\", "");
 
@@ -17,7 +17,7 @@ namespace Pr0cessor.Pr0grammApi {
 
       throw new Exception("This File-Extension is not yet supported. (Do you maybe use an outdated version of pr0cessor?).");
     }
-    public static bool IsVideo(FavoriteItem item) {
+    public static bool IsVideo(Item item) {
       switch (item.FileExtension.ToLower()) {
         case ".mp4":
         case ".webm":
@@ -28,7 +28,7 @@ namespace Pr0cessor.Pr0grammApi {
       }
     }
 
-    public static bool IsImage(FavoriteItem item) {
+    public static bool IsImage(Item item) {
       switch (item.FileExtension.ToLower()) {
         case ".jpg":
         case ".png":

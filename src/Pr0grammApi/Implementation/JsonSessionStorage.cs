@@ -15,30 +15,31 @@ namespace Pr0cessor.Pr0grammApi.Implementation {
     }
 
     public bool HasStored() {
-      return File.Exists(StoragePath) && Get().IsSuccess;
+      return File.Exists(StoragePath)
+        && Get().IsSuccess;
     }
 
     public Result<Session, string> Get() {
-      using (var fileStream = new StreamReader(StoragePath)) {
-        try {
+      try {
+        using (var fileStream = new StreamReader(StoragePath)) {
           var content = fileStream.ReadToEnd();
           var session = JsonConvert.DeserializeObject<Session>(content);
           return Result.Ok<Session, string>(session);
-        } catch (Exception exc) {
-          return Result.Fail<Session, string>(exc.Message);
         }
+      } catch (Exception exc) {
+        return Result.Fail<Session, string>(exc.Message);
       }
     }
 
     public Result Set(Session session) {
-      using (var fileStream = new StreamWriter(StoragePath, false, Encoding.UTF8)) {
-        try {
+      try {
+        using (var fileStream = new StreamWriter(StoragePath, false, Encoding.UTF8)) {
           var content = JsonConvert.SerializeObject(session);
           fileStream.Write(content);
           return Result.Ok();
-        } catch (Exception exc) {
-          return Result.Fail(exc.Message);
         }
+      } catch (Exception exc) {
+        return Result.Fail(exc.Message);
       }
     }
   }
