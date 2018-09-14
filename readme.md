@@ -8,6 +8,8 @@ however testing happens on Linux only.
 
 * Remember logged-in users (similar to being logged in with a Browser)
 * Download favorites (liked images) of a specified user
+* Download uploads of a specific user
+* Filtering downloads for images-only, videos-only or everything
 
 ## Examples
 
