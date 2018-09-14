@@ -56,7 +56,7 @@ namespace Pr0cessor.Pr0grammApi.Implementation {
 
       while (!reachedEndOfItems) {
         var queryData =
-          await new ItemsRequest(targetUser, Flags.All, lastReceivedItemId)
+          await new FavoritesRequest(targetUser, Flags.All, lastReceivedItemId)
           .ToFormUrlEncodedContent()
           .ReadAsStringAsync();
           
@@ -76,6 +76,35 @@ namespace Pr0cessor.Pr0grammApi.Implementation {
         }
       }
       return Result.Ok<IEnumerable<Item>, string>(favoritesCollection);
+    }
+
+    public async Task<Result<IEnumerable<Item>, string>> GetUploadsAsync(string targetUser) {
+      var reachedEndOfItems = false;
+      long? lastReceivedItemId = null;
+      var uploadsCollection = new List<Item>();
+
+      while (!reachedEndOfItems) {
+        var queryData =
+          await new UploadsRequest(targetUser, Flags.All, lastReceivedItemId)
+          .ToFormUrlEncodedContent()
+          .ReadAsStringAsync();
+          
+        var uri = new Uri($"{ApiConstants.ApiEndpoint}/items/get?{queryData}");
+
+        var itemsResponse = (await Get<ItemsResponse>(uri))
+          .OnSuccess(successfulResponse => {
+            reachedEndOfItems = successfulResponse.AtEnd;
+            uploadsCollection.AddRange(successfulResponse.Favorites);
+
+            if(successfulResponse.Favorites.Any())
+              lastReceivedItemId = successfulResponse.Favorites.Min(x => x.Id);
+          });
+
+        if (itemsResponse.IsFailure) {
+          return Result.Fail<IEnumerable<Item>, string>(itemsResponse.Error);
+        }
+      }
+      return Result.Ok<IEnumerable<Item>, string>(uploadsCollection);
     }
 
     private Cookie GetCookieByName(string name, Uri uri) {
@@ -119,5 +148,7 @@ namespace Pr0cessor.Pr0grammApi.Implementation {
     public void Dispose() {
       throw new NotImplementedException();
     }
+
+
   }
 }

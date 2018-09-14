@@ -1,6 +1,6 @@
 namespace Pr0cessor {
   public static class Constants {
-    public const string VERSION = @"0.2.5";
+    public const string VERSION = @"0.2.8";
     public const string HEADER = ">_ pr0cessor | " + VERSION;
 
     public const int EXITCODE_SUCCESS = 0;

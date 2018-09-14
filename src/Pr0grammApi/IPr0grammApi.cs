@@ -14,5 +14,6 @@ namespace Pr0cessor.Pr0grammApi {
     void AuthWithExistingSession(Session session);
     Task<Result<Session, string>> AuthAsync(string username, string password);
     Task<Result<IEnumerable<Item>, string>> GetFavoritesAsync(string targetUser);
+    Task<Result<IEnumerable<Item>, string>> GetUploadsAsync(string targetUser);
   }
 }

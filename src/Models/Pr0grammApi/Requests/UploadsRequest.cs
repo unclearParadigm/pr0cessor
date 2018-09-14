@@ -5,21 +5,21 @@ using System.Collections.Generic;
 using Pr0cessor.Models.Pr0grammApi;
 
 namespace Pr0cessor.Models.Pr0grammApi.Requests {
-  public class ItemsRequest {
-    public string Likes { get; set; }
+  public class UploadsRequest {
+    public string User { get; set; }
     public string Flags { get; set; }
     public string Older { get; set; }
 
-    public ItemsRequest(string likes, Flags flags, long? older=null) {
-      Likes = likes;
+    public UploadsRequest(string user, Flags flags, long? older=null) {
+      User = user;
       Flags = Convert.ToString((int)flags);
       Older = older?.ToString();
     }
     
     public FormUrlEncodedContent ToFormUrlEncodedContent() {
       var dict = new Dictionary<string, string> {
-            {"likes", Likes },
-            {"flags", Flags.ToString() },
+            {"user", User },
+            {"flags", Flags },
       };
 
       if(!String.IsNullOrEmpty(Older)){
