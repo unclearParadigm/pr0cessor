@@ -24,4 +24,7 @@ pr0cessor auth -u cha0s -p stahlofen1
 
 # Download all images from gamb's favorites and store them into a given directory
 pr0cessor favs -f gamb -i -d /path/to/my/pr0/favs
+
+# Download all uploads of cha0s and store them on C: (e.g. on Windows)
+pr0cessor uploads -f cha0s -e -d c://
 ```
