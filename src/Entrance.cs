@@ -1,18 +1,12 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using CommandLine;
-using CSharpFunctionalExtensions;
 using Pr0cessor.Pr0grammApi.Factories;
-
-using Pr0cessor.Models.Pr0grammApi.Responses;
 using Pr0cessor.Models.Configuration.CmdVerbs;
 
 namespace Pr0cessor {
-  public class Entrance {
+    public class Entrance {
     static async Task Main(string[] args) {
       PrintHeader();
 

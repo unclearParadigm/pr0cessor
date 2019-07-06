@@ -2,9 +2,6 @@ using System.Threading.Tasks;
 
 using CSharpFunctionalExtensions;
 
-using Pr0cessor.Models.Pr0grammApi;
-using Pr0cessor.Pr0grammApi.Implementation;
-
 namespace Pr0cessor.Pr0grammApi.Factories {
   public static class Pr0grammApiFactory {
     public static Task<Result<IPr0grammApi>> Create() {

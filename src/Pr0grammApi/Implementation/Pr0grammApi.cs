@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using CommandLine;
 using Newtonsoft.Json;
 using CSharpFunctionalExtensions;
 
@@ -15,7 +14,7 @@ using Pr0cessor.Models.Pr0grammApi.Requests;
 using Pr0cessor.Models.Pr0grammApi.Responses;
 
 namespace Pr0cessor.Pr0grammApi.Implementation {
-  public class Pr0grammApi : IPr0grammApi, IDisposable {
+    public class Pr0grammApi : IPr0grammApi, IDisposable {
     private readonly int _requestTimeout;
     private readonly HttpClient _httpClient;
     private readonly CookieContainer _cookieContainer;

@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 
-using CSharpFunctionalExtensions;
-
 using Pr0cessor.Pr0grammApi.Implementation;
 
 namespace Pr0cessor.Pr0grammApi.Factories {
