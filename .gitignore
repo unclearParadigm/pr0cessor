@@ -19,7 +19,7 @@
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
+[Rr]elease/*
 [Rr]eleases/
 x64/
 x86/
@@ -27,6 +27,10 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+
+# Allow to add zipped-releases
+
+!release/*.zip 
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
