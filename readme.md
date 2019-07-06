@@ -71,3 +71,23 @@ you have two options - either you clone this repository and build it yourself (w
 * extract the downloaded file into a directory of your choice (e.g. ```C://Tools/pr0cessor```)
 * add the path to the PATH-variable
 * now you can use pr0cessor from any Shell (powershell, cmd, bash, zsh, whatever you prefer)
+* refer to the examples above
+
+# Contributions
+
+any contributions are welcome! Feel free to send pull-requests!
+
+# License GNU General Public License Version 3
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
