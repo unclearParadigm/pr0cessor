@@ -51,7 +51,7 @@ pr0cessor uploads -f cha0s -e -d c://
 you have two options - either you clone this repository and build it yourself (which is recommended for experienced users only), or you download the pre-compiled executables for your platform.
 
 
-#### 1) The DIY-approch
+#### 1) The DIY-approch (recommended for developers and professionals only)
 
 * Clone the repository locally ```git clone https://github.com/unclearParadigm/pr0cessor.git```
 * Enter the src-folder of the Repository ```cd pr0cessor/src```
@@ -59,6 +59,15 @@ you have two options - either you clone this repository and build it yourself (w
 * Use dotnet-tooling to build it ```dotnet build```
 * Or just run it directly ```dotnet run```
 
-#### 2) Pre-compiled Releases
+#### 2) Pre-compiled Releases (recommended for everyone)
 
-* 
+* Download the pre-compiled release for your platform
+    * [Windows x32](release/win-x86.zip)
+    * [Windows x64](release/win-x64.zip)
+    * [Linux x64](release/linux-x64.zip)
+    * [Linux ARM (for RaspberryPI and other SBC)](release/linux-arm.zip)
+    * [Linux MUSL x64 (for musl-builds, e.g. docker-images of Alpine)](release/linux-musl-x64.zip)
+    * [Mac OSX x64](release/osx-x64.zip)
+* extract the downloaded file into a directory of your choice (e.g. ```C://Tools/pr0cessor```)
+* add the path to the PATH-variable
+* now you can use pr0cessor from any Shell (powershell, cmd, bash, zsh, whatever you prefer)
