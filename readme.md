@@ -61,13 +61,7 @@ you have two options - either you clone this repository and build it yourself (w
 
 #### 2) Pre-compiled Releases (recommended for everyone)
 
-* Download the pre-compiled release for your platform
-    * [Windows x32](release/win-x86.zip)
-    * [Windows x64](release/win-x64.zip)
-    * [Linux x64](release/linux-x64.zip)
-    * [Linux ARM (for RaspberryPI and other SBC)](release/linux-arm.zip)
-    * [Linux MUSL x64 (for musl-builds, e.g. docker-images of Alpine)](release/linux-musl-x64.zip)
-    * [Mac OSX x64](release/osx-x64.zip)
+* Download latest pre-compiled release for your platform from [Releases-Page](https://github.com/unclearParadigm/pr0cessor/releases)
 * extract the downloaded file into a directory of your choice (e.g. ```C://Tools/pr0cessor```)
 * add the path to the PATH-variable
 * now you can use pr0cessor from any Shell (powershell, cmd, bash, zsh, whatever you prefer)
