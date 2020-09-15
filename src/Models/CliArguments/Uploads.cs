@@ -1,10 +1,7 @@
-using System;
-
 using CommandLine;
+using pr0cessor.Models.CliArguments.Shared;
 
-using Pr0cessor.Models.Configuration.CmdVerbs.Shared;
-
-namespace Pr0cessor.Models.Configuration.CmdVerbs {
+namespace pr0cessor.Models.CliArguments {
   [Verb("uploads", HelpText = "Download uploaded content of a specifc user from pr0gramm")]
   public class Uploads : ItemsFilter {
     [Option('f', "from", Required = true, HelpText = "The username the favs belong to")]

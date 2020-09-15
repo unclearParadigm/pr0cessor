@@ -1,10 +1,7 @@
-using System;
-
 using CommandLine;
+using pr0cessor.Models.CliArguments.Shared;
 
-using Pr0cessor.Models.Configuration.CmdVerbs.Shared;
-
-namespace Pr0cessor.Models.Configuration.CmdVerbs {
+namespace pr0cessor.Models.CliArguments {
   [Verb("favs", HelpText = "Download favs / liked content from pr0gramm")]
   public class Favs : ItemsFilter {
     [Option('f', "from", Required = true, HelpText = "The username the favs belong to")]

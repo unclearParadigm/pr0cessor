@@ -1,7 +1,6 @@
-using System;
 using CommandLine;
 
-namespace Pr0cessor.Models.Configuration.CmdVerbs.Shared {
+namespace pr0cessor.Models.CliArguments.Shared {
   public class ItemsFilter {
     [Option('e', "everything", Default = false, HelpText = "Downloads everything")]
     public bool Everything { get; set; }

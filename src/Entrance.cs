@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 
 using CommandLine;
+using pr0cessor.Models.CliArguments;
 using Pr0cessor.Pr0grammApi.Factories;
-using Pr0cessor.Models.Configuration.CmdVerbs;
 
 namespace Pr0cessor {
     public class Entrance {

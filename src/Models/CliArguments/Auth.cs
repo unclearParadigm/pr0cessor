@@ -1,7 +1,6 @@
-using System;
 using CommandLine;
 
-namespace Pr0cessor.Models.Configuration.CmdVerbs {
+namespace pr0cessor.Models.CliArguments {
   [Verb("auth", HelpText = "Permanent authentication of specific user (no need to enter username and password everytime)")]
   public class Auth {
     [Option('u', "username", Required = true, HelpText = "Your username, required for authentication")]
