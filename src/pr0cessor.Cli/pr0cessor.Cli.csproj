@@ -1,0 +1,24 @@
+<!-- das pr0gramm mag pr0grammierer -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LangVersion>8</LangVersion>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>pr0cessor</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.11.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\pr0cessor.Environment\pr0cessor.Environment.csproj" />
+    <ProjectReference Include="..\pr0cessor.Localization\pr0cessor.Localization.csproj" />
+    <ProjectReference Include="..\pr0cessor.Persistence\pr0cessor.Persistence.csproj" />
+    <ProjectReference Include="..\pr0gramm.Domain\pr0gramm.Domain.csproj" />
+    <ProjectReference Include="..\pr0gramm.WebApi\pr0gramm.WebApi.csproj" />
+  </ItemGroup>
+</Project>
